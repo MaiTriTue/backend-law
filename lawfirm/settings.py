@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-gwdjgl+g5kbiiuj=i%afboj4$zw60=oiti6!to@#cb&cx-l9jm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [".vercel.app"]
-# ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = [".vercel.app"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,9 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'origin.apps.OriginConfig',
+    'ckeditor',
+    'ckeditor_uploader',
+    'corsheaders',
+    'rest_framework',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,10 +81,32 @@ WSGI_APPLICATION = 'lawfirm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'db_name',
+#         'USER': 'db_user',
+#         'PASSWORD': 'db_user_password',
+#         'HOST': '',
+#         'PORT': 'db_port_number',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'lawfirm',
+        'USER': 'postgres',
+        'PASSWORD': 'Tue160489#',
+        'HOST': '',
+        'PORT': '5432',
     }
 }
 
@@ -122,4 +150,22 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
+}
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'origin.User'
+STATIC_URL = '/static/'
+STATIC_ROOT = 'static/'
+# STATICFILES_DIRS = [BASE_DIR / 'static']
+MEDIA_ROOT = '%s/origin/static/' % BASE_DIR
+CKEDITOR_UPLOAD_PATH = 'posts/'
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = ['DELETE', 'GET', 'POST', 'OPTIONS', 'PATCH', 'PUT', ]
+CORS_ALLOW_ORIGINS = ['https://example.com', 'https://127.0.0.1:8000', 'https://backend-law.vercel.app' ]
