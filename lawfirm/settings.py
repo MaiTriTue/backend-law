@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -99,14 +104,26 @@ WSGI_APPLICATION = 'lawfirm.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'lawfirm',
+#         'USER': 'postgres',
+#         'PASSWORD': 'Tue160489#',
+#         'HOST': '',
+#         'PORT': '5432',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'lawfirm',
-        'USER': 'postgres',
-        'PASSWORD': 'Tue160489#',
-        'HOST': '',
-        'PORT': '5432',
+        'ENGINE': env('SQL_ENGINE', default='django.db.backends.sqlite3'),
+        'DATABASE_URL': env('SQL_DATABASE_URL', default=''),
+        'NAME': env('SQL_DATABASE', default=os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': env('SQL_USER', default='user'),
+        'PASSWORD': env('SQL_PASSWORD', default='password'),
+        'HOST': env('SQL_HOST', default='localhost'),
+        'PORT': env('SQL_PORT', default=''),
     }
 }
 
@@ -163,9 +180,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'origin.User'
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static/'
-# STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_ROOT = '%s/origin/static/' % BASE_DIR
 CKEDITOR_UPLOAD_PATH = 'posts/'
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_METHODS = ['DELETE', 'GET', 'POST', 'OPTIONS', 'PATCH', 'PUT', ]
 CORS_ALLOW_ORIGINS = ['https://example.com', 'https://127.0.0.1:8000', 'https://backend-law.vercel.app' ]
+
+SECURE_SSL_REDIRECT = True
+
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
+
+SECURE_BROWSER_XSS_FILTER = True
